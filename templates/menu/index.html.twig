@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title_container %}Affichage d'un menu{% endblock %}
+
+{% block page_name %}Menu{% endblock %}
+
+{% block inner_container %}
+<div class="container">
+  <div class="row">
+    <div class="col col-5">
+      {% if not menu.produits.empty %}
+        <h2 style="font-family:'poppins';font-weight:700;">{{menu.libelle|upper}}</h2>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Produits</th>
+                <th scope="col">Composants</th>
+                <th scope="col">Prix</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for produit in menu.produits %}
+              <tr>
+                <td>{{produit.libelle}}</td>
+                <td>
+                  {% for composant in produit.composants %}
+                    {{composant}} - 
+                  {% endfor %}
+                </td>
+                <td>{{produit.prix}} F CFA</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+      {% endif %}
+    </div>
+    <div class="col">
+      <img class="card-img-top" src="../assets/img/menus/{{menu.image}}"  alt="produit" />
+    </div>
+    <div class="col d-flex align-items-end">
+      <div>
+        <a href="{{path('cart_add', {'id':menu.id})}}" type="button" class="w-100 btn btn-dark">Mettre au panier</a>
+        <a href="{{path('catalogue')}}" type="button" class="mt-3 w-100 btn btn-outline-danger">Retour au catalogue</a>
+      </div>    
+    </div>
+  </div>
+</div>
+{% endblock %}

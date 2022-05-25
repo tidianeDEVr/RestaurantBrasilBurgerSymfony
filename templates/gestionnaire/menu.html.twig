@@ -1,0 +1,150 @@
+{% extends 'backend.html.twig' %}
+
+{% block title_container %}Menus{% endblock %}
+
+{% block page_name %}Menus{% endblock %}
+
+{% block inner_container %}
+    <div class="col-12">
+      <div class="card recent-sales">
+        <div class="card-body">
+          <h5 class="card-title">Menus <span>| Modifier ou ajouter un menu</span></h5>
+          <div class='container'>
+            {{ form_start(form) }}
+              <div class="row mb-3">
+                <label for="inputText" class="col-sm-2 col-form-label">Libelle</label>
+                <div class="col-sm-10">
+                  {{ form_widget(form.libelle) }}
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="inputNumber" class="col-sm-2 col-form-label">Image</label>
+                <div class="col-sm-10">
+                  {{ form_widget(form.image) }}
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="inputPassword" class="col-sm-2 col-form-label">Description</label>
+                <div class="col-sm-10">
+                  {{ form_widget(form.description) }}
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Produits</label>
+                <div class="col-sm-10">
+                  <label class="col-sm-12 col-form-label">Maintenir 'ctrl' pour selectionner plusieurs produits</label>
+                  {# <select class="form-select" name='produits' multiple>
+                    {% for produit in produits %}
+                      <option value="{{produit.id}}" required>{{produit.libelle}}</option>
+                    {% endfor %}
+                  </select> #}
+                  <div class="col-sm-10">
+                    <input type="text" id="validationTooltip" class="form-control" name='produits' value='
+                    {% for produit in produits %}
+                      {{produit.libelle}}
+                    {% endfor %}
+                    ' required>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                  <button type="submit" class="btn btn-primary">Soumettre</button>
+                </div>
+              </div>
+            {{ form_end(form) }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="card recent-sales">
+        <div class="card-body">
+          <h5 class="card-title">Menus <span>| Gérer les différents menus</span></h5>
+          <table class="table datatable">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Libelle</th>
+                <th scope="col">Image</th>
+                <th scope="col">Produits</th>
+                <th scope="col">Description</th>
+                <th scope="col">Catégorie</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for menu in menus %}
+                    <tr>
+                        <th scope="row">{{menu.id}}</th>
+                        <td>{{menu.libelle}}</td>
+                        <td><img width='70px' src='{{asset("assets/img/menus/")}}{{menu.image}}'></td>
+                        <td>
+                            {% for produit in menu.produits %}
+                                {{produit.libelle}}, 
+             
+                            {% endfor %}
+                        </td>
+                        <td>{{menu.description}}</td>
+                        <td>{{menu.category}}</td>
+                        <td class='d-flex pt-5'>
+                            <a type="submit" href='#' class="btn btn-outline-warning mx-2">
+                              <i class="bi bi-pencil-square"></i>
+                            </a>
+                            <a type="submit" href='#' class="btn btn-outline-danger mx-2">
+                              <i class="bi bi-archive-fill"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    var input = document.querySelector('input[name=produits]'),
+    // init Tagify script on the above inputs
+    tagify = new Tagify(input, {
+        whitelist : {{ produits|json_encode() }},
+        dropdown: {
+            position: "manual",
+            maxItems: Infinity,
+            enabled: 0,
+            classname: "customSuggestionsList"
+        },
+        enforceWhitelist: true
+    })
+
+    tagify.on("dropdown:show", onSuggestionsListUpdate)
+          .on("dropdown:hide", onSuggestionsListHide)
+          .on('dropdown:scroll', onDropdownScroll)
+
+    renderSuggestionsList()
+
+    // ES2015 argument destructuring
+    function onSuggestionsListUpdate({ detail:suggestionsElm }){
+        console.log(  suggestionsElm  )
+    }
+
+    function onSuggestionsListHide(){
+        console.log("hide dropdown")
+    }
+
+    function onDropdownScroll(e){
+        console.log(e.detail)
+      }
+
+    // https://developer.mozilla.org/en-US/docs/Web/API/Element/insertAdjacentElement
+    function renderSuggestionsList(){
+        tagify.dropdown.show() // load the list
+        tagify.DOM.scope.parentNode.appendChild(tagify.DOM.dropdown)
+    }
+
+</script>
+{% endblock %}

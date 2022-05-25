@@ -1,0 +1,98 @@
+{% extends 'backend.html.twig' %}
+
+{% block title_container %}Produits{% endblock %}
+
+{% block page_name %}Produits{% endblock %}
+
+{% block inner_container %}
+  <div class="col-12">
+      <div class="card recent-sales">
+        <div class="card-body">
+          <h5 class="card-title">Produits <span>| Modifier ou ajouter un produit</span></h5>
+          <div class='container'>
+            {{ form_start(form) }}
+                <div class="row mb-3">
+                  <label for="validationTooltip" class="col-sm-2 col-form-label">Libelle</label>
+                  <div class="col-sm-10">
+                    {{ form_widget(form.libelle) }}
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label for="validationTooltip" class="col-sm-2 col-form-label">Prix en F CFA</label>
+                  <div class="col-sm-10">
+                    {{ form_widget(form.prix) }}
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label">Composants</label>
+                  <div class="col-sm-10">
+                    <input type="text" id="validationTooltip" class="form-control" name='composants' value='Ajoutez des composants' required>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label"></label>
+                  <div class="col-sm-10">
+                    <button type="submit" class="btn btn-primary">Soumettre</button>
+                  </div>
+                </div>
+              {{ form_end(form) }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="card recent-sales">
+        <div class="card-body">
+          <h5 class="card-title">Produits <span>| Gérer les différents produits</span></h5>
+          <table class="table datatable">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Libelle</th>
+                <th scope="col">Composants</th>
+                <th scope="col">Prix</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for produit in produits %}
+                    <tr>
+                        <th scope="row">{{produit.id}}</th>
+                        <td>{{produit.libelle}}</td>
+                        <td>
+                            {% for composant in produit.composants %}
+                                {{composant}}, 
+                            {% endfor %}
+                        </td>
+                        <td>{{produit.prix}} F CFA</td>
+                        <td class='d-flex'>
+                            <a type="submit" href="{{path('product_edit', {id:produit.id})}}" class="btn btn-outline-warning mx-2">
+                              <i class="bi bi-pencil-square"></i>
+                            </a>
+                            <a type="submit" href='#' class="btn btn-outline-danger mx-2">
+                              <i class="bi bi-archive-fill"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+  // The DOM element you wish to replace with Tagify
+  var input = document.querySelector('input[name=composants]');
+
+  // initialize Tagify on the above input node reference
+  new Tagify(input,
+    {
+    originalInputValueFormat: valuesArr => valuesArr.map(item => item.value).join(',')
+    }
+  )
+</script>
+{% endblock %}

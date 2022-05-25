@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title_container %}Mes commandes{% endblock %}
+
+{% block page_name %}Commandes{% endblock %}
+
+{% block inner_container %}
+    {% if commandes | length > 0 %}
+        <div class="container">
+            <div class="card">
+                    <div class="card-body"> 
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Menus</th>
+                                <th scope="col">Etat</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Prix</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for commande in commandes %}
+                                <tr>
+                                    <th scope="row">{{commande.id}}</th>
+                                    <td>
+                                        {% for menu in commande.menus %}
+                                            {{menu.libelle}} - 
+                                        {% endfor %}
+                                    </td>
+                                    <td>{{commande.etat}}</td>
+                                    <td>{{commande.commandedAt|date('d-m-Y')}}</td>
+                                    <td>{{commande.prix}} Francs CFA</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>    
+    {% else %}
+        <h3> Vous n'avez pas de commandes actuellement ! </h3>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends 'backend.html.twig' %}
+
+{% block title_container %}Commandes{% endblock %}
+
+{% block page_name %}Commandes{% endblock %}
+
+{% block inner_container %}
+    <div class="col-12">
+        <div class="card recent-sales">
+            <div class="card-body">
+                <h5 class="card-title">Commandes <span>| Gérer les commandes effectuées</span></h5>
+                <table class="table datatable">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Client</th>
+                        <th scope="col">Menus</th>
+                        <th scope="col">Prix</th>
+                        <th scope="col">Statut</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for commande in commandes %}
+                            <tr>
+                                <th scope="row">{{commande.id}}</th>
+                                <td>{{commande.client.nomComplet}}</td>
+                                <td>
+                                    {% for menu in commande.menus %}
+                                        {{menu.libelle}}, 
+                                    {% endfor %}
+                                </td>
+                                <td>{{commande.prix}} F CFA</td>
+                                <td>
+                                    <span 
+                                        {% if commande.etat == 'En cours' %}
+                                            class="badge bg-warning"
+                                        {% elseif commande.etat == 'Prete' %}
+                                            class="badge bg-success"
+                                        {% else %}
+                                            class="badge bg-danger"
+                                        {% endif %}
+                                        >
+                                        {{commande.etat}}
+                                    </span>
+                                </td>
+                                <td>{{commande.commandedAt|date('d-m-Y')}} {{ commande.commandedAt|date('H:i') }}</td>
+                                <td class='d-flex'>
+                                    <a type="submit" href="{{path('valid_command', {id:commande.id})}}" class="btn btn-success btn-sm mx-2">
+                                        <i class="bi bi-check-circle-fill"></i>
+                                    </a>
+                                    <a type="submit" href="{{path('remov_command', {id:commande.id})}}" class="btn btn-danger btn-sm mx-2">
+                                        <i class="bi bi-x-circle-fill"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
